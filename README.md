@@ -187,7 +187,7 @@ const allowedTypes = [
 
 ```bash
 # Build for production
-npm run dev
+npm run build
 
 # Deploy to Netlify, Vercel, or any static hosting
 ```
