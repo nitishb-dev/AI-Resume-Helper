@@ -7,8 +7,8 @@ A modern web application that analyzes resumes against job descriptions using AI
 ## 🚀 Features
 
 - **Smart Resume Analysis** - AI-powered comparison between your resume and job descriptions
-- **File Upload Support** - Upload PDF and DOCX files with basic text extraction
-- **Text Input Option** - Paste resume and job description text directly for best accuracy
+- **File Upload Support** - Upload resume as PDF files with basic text extraction
+- **Text Input Option** - Paste job description text directly for best accuracy
 - **Match Scoring** - Get a percentage match score based on keyword alignment
 - **Keyword Extraction** - Identify important skills and keywords from job descriptions
 - **Actionable Suggestions** - Receive specific recommendations to improve your resume
@@ -124,7 +124,7 @@ const allowedTypes = [
 
 ### For Users
 
-1. **Upload Resume** - Upload your PDF/DOCX resume or paste text directly
+1. **Upload Resume** - Upload your PDF resume
 2. **Add Job Description** - Paste the job description you're applying for
 3. **Analyze** - Click "Analyze Resume" to get insights
 4. **Review Results** - Get match score, keywords, and improvement suggestions
