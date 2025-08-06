@@ -1,10 +1,5 @@
-//const API_ENDPOINT = "https://n8n-deploy-0voq.onrender.com/webhook/a8719fcd-367a-4d20-92e7-c47ff591f1cd";
-
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 console.log('API Endpoint:', API_ENDPOINT);
-console.log('API Endpoint:', import.meta.env.VITE_API_ENDPOINT);
-
-
 export const submitResumeAnalysis = async (formData: FormData): Promise<any> => {
   try {
     const response = await fetch(API_ENDPOINT, {
