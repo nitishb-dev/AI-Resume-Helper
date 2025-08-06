@@ -3,21 +3,21 @@ import { Upload, File, X, CheckCircle } from 'lucide-react';
 import { validateFile, formatFileSize } from '../utils/fileValidation';
 
 interface FileUploadProps {
-  onFileSelect: (file: File) => void;
-  accept?: string;
+  onFileSelect: (file: File | null) => void;
   label: string;
   description: string;
   selectedFile?: File | null;
   error?: string;
+  acceptedTypes?: string[]; // ✅ NEW prop
 }
 
 export const FileUpload: React.FC<FileUploadProps> = ({
   onFileSelect,
-  accept = ".pdf,.docx,.doc",
   label,
   description,
   selectedFile,
-  error
+  error,
+  acceptedTypes = ['application/pdf'], // ✅ Default to PDF
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -35,21 +35,20 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    
+
     const files = Array.from(e.dataTransfer.files);
     if (files.length > 0) {
       handleFileSelection(files[0]);
     }
-  }, []);
+  }, [acceptedTypes]);
 
   const handleFileSelection = (file: File) => {
-    const validation = validateFile(file);
-    
-    if (!validation.isValid) {
-      setValidationError(validation.error || 'Invalid file');
+    // Validate allowed types
+    if (!acceptedTypes.includes(file.type)) {
+      setValidationError('Only PDF files are allowed.');
       return;
     }
-    
+
     setValidationError(null);
     onFileSelect(file);
   };
@@ -63,17 +62,15 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
   const removeFile = () => {
     setValidationError(null);
-    onFileSelect(null as any);
+    onFileSelect(null);
   };
 
   const displayError = error || validationError;
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">
-        {label}
-      </label>
-      
+      <label className="block text-sm font-medium text-gray-700">{label}</label>
+
       {!selectedFile ? (
         <div
           className={`relative border-2 border-dashed rounded-lg p-6 transition-all duration-200 ${
@@ -92,7 +89,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
             <div className="mt-4">
               <label htmlFor={`file-upload-${label}`} className="cursor-pointer">
                 <span className="mt-2 block text-sm font-medium text-gray-900">
-                  Drop your file here, or{' '}
+                  Drop your PDF here, or{' '}
                   <span className="text-blue-600 hover:text-blue-500">browse</span>
                 </span>
                 <input
@@ -100,7 +97,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
                   name={`file-upload-${label}`}
                   type="file"
                   className="sr-only"
-                  accept={accept}
+                  accept={acceptedTypes.join(',')} // ✅ Accept only allowed types
                   onChange={handleFileInput}
                 />
               </label>
@@ -125,10 +122,8 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           </button>
         </div>
       )}
-      
-      {displayError && (
-        <p className="text-sm text-red-600">{displayError}</p>
-      )}
+
+      {displayError && <p className="text-sm text-red-600">{displayError}</p>}
     </div>
   );
 };
