@@ -15,7 +15,6 @@ export interface ResumeAnalysisResult {
 const App: React.FC = () => {
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [jobDescription, setJobDescription] = useState<string>("");
-  const [jobFile, setJobFile] = useState<File | null>(null);
 
   const [resumeError, setResumeError] = useState<string>();
   const [jobError, setJobError] = useState<string>();
@@ -44,8 +43,8 @@ const App: React.FC = () => {
     }
     setResumeError(undefined);
 
-    if (!jobDescription && !jobFile) {
-      setJobError("Please provide a job description (text or file).");
+    if (!jobDescription) {
+      setJobError("Please provide a job description.");
       return;
     }
     setJobError(undefined);
@@ -56,12 +55,7 @@ const App: React.FC = () => {
 
       const formData = new FormData();
       formData.append("resume", resumeFile);
-
-      if (jobFile) {
-        formData.append("jobDescriptionFile", jobFile);
-      } else {
-        formData.append("jobDescriptionText", jobDescription);
-      }
+      formData.append("jobDescriptionText", jobDescription);
 
       const response: ResumeAnalysisResult = await submitResumeAnalysis(formData);
       setResults(response);
@@ -109,8 +103,6 @@ const App: React.FC = () => {
             <JobDescriptionInput
               value={jobDescription}
               onChange={setJobDescription}
-              onFileSelect={setJobFile}
-              selectedFile={jobFile}
               error={jobError}
             />
           </div>
