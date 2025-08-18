@@ -1,199 +1,295 @@
-import React, { useState, useRef } from 'react';
-import { FileText, Zap, AlertCircle, CheckCircle } from 'lucide-react';
-import { FileUpload } from './components/FileUpload';
-import { JobDescriptionInput } from './components/JobDescriptionInput';
-import { ResultsDisplay } from './components/ResultsDisplay';
-import { LoadingSpinner } from './components/LoadingSpinner';
-import { submitResumeAnalysis } from './services/api';
+// import React, { useState, useRef, useEffect } from "react";
+// import { FileUpload } from "./components/FileUpload";
+// import { JobDescriptionInput } from "./components/JobDescriptionInput";
+// import { ResultsDisplay } from "./components/ResultsDisplay";
+// import { submitResumeAnalysis } from "./services/api";
+// import { LoadingSpinner } from "./components/LoadingSpinner";
 
-function App() {
+// // ✅ Backend response type
+// export interface ResumeAnalysisResult {
+//   matchRating: number;
+//   missingSkills: string[];
+//   overallSuggestions: string[];
+//   relevantProjects: string[];
+// }
+
+// const App: React.FC = () => {
+//   const [resumeFile, setResumeFile] = useState<File | null>(null);
+//   const [jobDescription, setJobDescription] = useState<string>("");
+//   const [jobFile, setJobFile] = useState<File | null>(null);
+
+//   const [resumeError, setResumeError] = useState<string>();
+//   const [jobError, setJobError] = useState<string>();
+
+//   const [results, setResults] = useState<ResumeAnalysisResult | null>(null);
+//   const [loading, setLoading] = useState(false);
+
+//   // ✅ Ref for results section
+//   const resultsRef = useRef<HTMLDivElement | null>(null);
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault();
+
+//     // ✅ Resume validation
+//     if (!resumeFile) {
+//       setResumeError("Please upload your resume.");
+//       return;
+//     }
+//     if (resumeFile.type !== "application/pdf") {
+//       setResumeError("Only PDF files are allowed.");
+//       return;
+//     }
+//     setResumeError(undefined);
+
+//     // ✅ Job description validation
+//     if (!jobDescription && !jobFile) {
+//       setJobError("Please provide a job description (text or file).");
+//       return;
+//     }
+//     setJobError(undefined);
+
+//     try {
+//       setLoading(true);
+//       setResults(null);
+
+//       const formData = new FormData();
+//       formData.append("resume", resumeFile);
+
+//       if (jobFile) {
+//         formData.append("jobDescriptionFile", jobFile);
+//       } else {
+//         formData.append("jobDescriptionText", jobDescription);
+//       }
+
+//       const response: ResumeAnalysisResult = await submitResumeAnalysis(formData);
+//       setResults(response);
+//     } catch (err) {
+//       console.error("❌ API error:", err);
+//       setJobError("Something went wrong. Please try again.");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // ✅ Auto-scroll when results update
+//   useEffect(() => {
+//     if (results && resultsRef.current) {
+//       resultsRef.current.scrollIntoView({ behavior: "smooth" });
+//     }
+//   }, [results]);
+
+//   return (
+//     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-6">
+//       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 space-y-8 border border-gray-100">
+//         {/* Header */}
+//         <div className="text-center space-y-2">
+//           <h1 className="text-3xl font-extrabold text-gray-800">
+//             🚀 AI Resume Helper
+//           </h1>
+//           <p className="text-gray-600 text-lg">
+//             Upload your resume and job description to get{" "}
+//             <span className="font-semibold text-blue-600">
+//               instant AI-powered feedback
+//             </span>
+//             .
+//           </p>
+//         </div>
+
+//         {/* Form */}
+//         <form onSubmit={handleSubmit} className="space-y-8">
+//           {/* ✅ Resume Upload (Only PDF) */}
+//           <FileUpload
+//             onFileSelect={setResumeFile}
+//             label="Upload Resume"
+//             description="Upload your resume in PDF format (max 10MB)"
+//             selectedFile={resumeFile}
+//             error={resumeError}
+//           />
+
+//           {/* ✅ Job Description (Text or File) */}
+//           <JobDescriptionInput
+//             value={jobDescription}
+//             onChange={setJobDescription}
+//             onFileSelect={setJobFile}
+//             selectedFile={jobFile}
+//             error={jobError}
+//           />
+
+//           {/* Submit Button */}
+//           <div className="flex justify-center">
+//             <button
+//               type="submit"
+//               disabled={loading}
+//               className="px-8 py-3 bg-blue-600 text-white font-medium rounded-xl shadow-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-transform transform hover:scale-105"
+//             >
+//               {loading ? "Analyzing..." : "Analyze Resume"}
+//             </button>
+//           </div>
+//         </form>
+
+//         {/* Loader */}
+//         {loading && (
+//           <div className="flex justify-center">
+//             <LoadingSpinner />
+//           </div>
+//         )}
+
+//         {/* Results */}
+//         {results && (
+//           <div ref={resultsRef} className="mt-6">
+//             <ResultsDisplay results={results} />
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default App;
+
+// App.tsx
+import React, { useState, useRef, useEffect } from "react";
+import { FileUpload } from "./components/FileUpload";
+import { JobDescriptionInput } from "./components/JobDescriptionInput";
+import { ResultsDisplay } from "./components/ResultsDisplay";
+import { submitResumeAnalysis } from "./services/api";
+import { LoadingSpinner } from "./components/LoadingSpinner";
+
+export interface ResumeAnalysisResult {
+  matchRating: number;
+  missingSkills: string[];
+  overallSuggestions: string[];
+  relevantProjects: string[];
+}
+
+const App: React.FC = () => {
   const [resumeFile, setResumeFile] = useState<File | null>(null);
-  const [jobDescription, setJobDescription] = useState<string>('');
-  const [jobDescriptionFile, setJobDescriptionFile] = useState<File | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [results, setResults] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [formErrors, setFormErrors] = useState<{ resume?: string; jobDescription?: string }>({});
+  const [jobDescription, setJobDescription] = useState<string>("");
+  const [jobFile, setJobFile] = useState<File | null>(null);
 
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const [resumeError, setResumeError] = useState<string>();
+  const [jobError, setJobError] = useState<string>();
 
-  const validateForm = () => {
-    const errors: { resume?: string; jobDescription?: string } = {};
+  const [results, setResults] = useState<ResumeAnalysisResult | null>(null);
+  const [loading, setLoading] = useState(false);
 
-    if (!resumeFile) {
-      errors.resume = 'Please upload your resume';
-    } else if (resumeFile.type !== 'application/pdf') {
-      errors.resume = 'Only PDF files are supported';
-    }
-
-    if (!jobDescription.trim() && !jobDescriptionFile) {
-      errors.jobDescription = 'Please provide a job description';
-    }
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
+  const resultsRef = useRef<HTMLDivElement | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) return;
+    if (!resumeFile) {
+      setResumeError("Please upload your resume.");
+      return;
+    }
+    if (resumeFile.type !== "application/pdf") {
+      setResumeError("Only PDF files are allowed.");
+      return;
+    }
+    setResumeError(undefined);
 
-    setIsLoading(true);
-    setError(null);
-    setResults(null);
+    if (!jobDescription && !jobFile) {
+      setJobError("Please provide a job description (text or file).");
+      return;
+    }
+    setJobError(undefined);
 
     try {
+      setLoading(true);
+      setResults(null);
+
       const formData = new FormData();
+      formData.append("resume", resumeFile);
 
-      if (resumeFile) {
-        formData.append('resume', resumeFile);
-      }
-
-      if (jobDescriptionFile) {
-        formData.append('jobDescription', jobDescriptionFile);
+      if (jobFile) {
+        formData.append("jobDescriptionFile", jobFile);
       } else {
-        formData.append('jobDescriptionText', jobDescription);
+        formData.append("jobDescriptionText", jobDescription);
       }
 
-      const response = await submitResumeAnalysis(formData);
+      const response: ResumeAnalysisResult = await submitResumeAnalysis(formData);
       setResults(response);
-
-      setTimeout(() => {
-        resultsRef.current?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
     } catch (err) {
-      console.error('Submission error:', err);
-      setError('Failed to analyze your resume. Please try again.');
+      console.error("❌ API error:", err);
+      setJobError("Something went wrong. Please try again.");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const resetForm = () => {
-    setResumeFile(null);
-    setJobDescription('');
-    setJobDescriptionFile(null);
-    setResults(null);
-    setError(null);
-    setFormErrors({});
-  };
+  useEffect(() => {
+    if (results && resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [results]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4">
-      <div className="container mx-auto py-8 max-w-4xl">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <div className="flex items-center justify-center space-x-3 mb-4">
-            <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full shadow-lg">
-              <FileText className="h-8 w-8 text-white" />
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors">
+      <div className="max-w-5xl mx-auto p-6">
+        {/* ✅ Hero Section */}
+        <header className="text-center py-8 space-y-4">
+          <div className="flex justify-center">
+            <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-blue-100 text-blue-600 text-3xl font-bold shadow-sm">
+              🚀
             </div>
-            <h1 className="py-2 text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Resume Helper Agent
-            </h1>
           </div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Upload your resume and job description to get AI-powered suggestions and improve your chances of landing the job.
+          <h1 className="text-4xl font-extrabold text-gray-800 dark:text-white">
+            AI Resume Helper
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Upload your resume and job description to get{" "}
+            <span className="font-semibold text-blue-600">
+              instant AI-powered feedback
+            </span>{" "}
+            and boost your chances of landing interviews.
           </p>
-        </div>
+        </header>
 
-        {/* Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-10">
+        {/* ✅ Form Section */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 space-y-8">
           <form onSubmit={handleSubmit} className="space-y-8">
             <FileUpload
               onFileSelect={setResumeFile}
-              label="Upload Your Resume"
-              description="Only PDF format (max 10MB)"
+              label="Upload Resume"
+              description="Upload your resume in PDF format (max 10MB)"
               selectedFile={resumeFile}
-              error={formErrors.resume}
-              acceptedTypes={['application/pdf']}
+              error={resumeError}
             />
 
             <JobDescriptionInput
               value={jobDescription}
               onChange={setJobDescription}
-              onFileSelect={setJobDescriptionFile}
-              selectedFile={jobDescriptionFile}
-              error={formErrors.jobDescription}
+              onFileSelect={setJobFile}
+              selectedFile={jobFile}
+              error={jobError}
             />
 
-            {/* Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex justify-center">
               <button
                 type="submit"
-                disabled={isLoading}
-                className="flex items-center justify-center space-x-2 px-8 py-3 w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                disabled={loading}
+                className="px-10 py-3 bg-blue-600 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 transition-transform transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Analyzing...</span>
-                  </>
-                ) : (
-                  <>
-                    <Zap className="h-5 w-5" />
-                    <span>Analyze Resume</span>
-                  </>
-                )}
+                {loading ? "Analyzing..." : "Analyze Resume"}
               </button>
-
-              {(results || error) && (
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors w-full sm:w-auto"
-                >
-                  Start Over
-                </button>
-              )}
             </div>
           </form>
-        </div>
 
-        {/* Loading */}
-        {isLoading && (
-          <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
-            <LoadingSpinner />
-            <h3 className="text-lg font-semibold text-gray-900 mt-4">
-              Analyzing Your Resume
-            </h3>
-            <p className="text-gray-600 mt-2">
-              Our AI is comparing your resume with the job description...
-            </p>
-          </div>
-        )}
-
-        {/* Error */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
-            <div className="flex items-center space-x-3">
-              <AlertCircle className="h-6 w-6 text-red-600" />
-              <div>
-                <h3 className="text-lg font-semibold text-red-900">Analysis Failed</h3>
-                <p className="text-red-700 mt-1">{error}</p>
-              </div>
+          {loading && (
+            <div className="flex justify-center py-4">
+              <LoadingSpinner />
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Results */}
-        {results && (
-          <div ref={resultsRef} className="bg-white rounded-2xl shadow-xl p-8">
-            <div className="flex items-center space-x-3 mb-6">
-              <CheckCircle className="h-6 w-6 text-green-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Analysis Complete</h2>
+          {results && (
+            <div ref={resultsRef} className="mt-10">
+              <ResultsDisplay results={results} />
             </div>
-            <ResultsDisplay results={results.data} />
-          </div>
-        )}
-
-        {/* Footer */}
-        <div className="text-center mt-12 text-sm text-gray-500">
-          Powered by AI • Secure file upload • Your data is processed safely
+          )}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default App;

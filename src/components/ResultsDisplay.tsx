@@ -1,77 +1,73 @@
-import React from 'react';
-import { CheckCircle, AlertCircle, TrendingUp, Target, Lightbulb } from 'lucide-react';
+import React from "react";
+import {
+  CheckCircle,
+  AlertCircle,
+  TrendingUp,
+  Target,
+  Lightbulb,
+} from "lucide-react";
+import { ResumeAnalysisResult } from "../App";
 
 interface ResultsDisplayProps {
-  results: any;
+  results: ResumeAnalysisResult;
 }
 
 export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
   if (!results) return null;
 
-
-  const data = results;
-
-
-  const matchRating = typeof data.matchRating === 'number' ? data.matchRating : 0;
-  const missingSkills = Array.isArray(data.missingSkills) ? data.missingSkills : [];
-  const overallSuggestions = Array.isArray(data.overallSuggestions) ? data.overallSuggestions : [];
-  const relevantProjects = Array.isArray(data.relevantProjects) ? data.relevantProjects : [];
-
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
-  };
-
-  const getScoreBgColor = (score: number) => {
-    if (score >= 80) return 'bg-green-100';
-    if (score >= 60) return 'bg-yellow-100';
-    return 'bg-red-100';
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'bg-red-100 text-red-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'low': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Match Score */}
-      <div className={`p-6 rounded-lg ${getScoreBgColor(matchRating)}`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <TrendingUp className={`h-8 w-8 ${getScoreColor(matchRating)}`} />
-            <div>
-              <h3 className={`text-lg font-semibold ${getScoreColor(matchRating)}`}>
-                Resume Match Score
-              </h3>
-              <p className="text-sm text-gray-600">
-                How well your resume matches the job description
-              </p>
-            </div>
-          </div>
-          <div className={`text-3xl font-bold ${getScoreColor(matchRating)}`}>
-            {matchRating}%
+    <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-8 space-y-8 border border-gray-100 dark:border-gray-700">
+      {/* ✅ Match Rating with Progress Circle */}
+      <div className="flex flex-col items-center space-y-3">
+        <div className="relative w-28 h-28">
+          <svg className="w-28 h-28 transform -rotate-90">
+            <circle
+              cx="56"
+              cy="56"
+              r="50"
+              stroke="currentColor"
+              className="text-gray-200"
+              strokeWidth="8"
+              fill="transparent"
+            />
+            <circle
+              cx="56"
+              cy="56"
+              r="50"
+              stroke="currentColor"
+              className="text-blue-600"
+              strokeWidth="8"
+              fill="transparent"
+              strokeDasharray={2 * Math.PI * 50}
+              strokeDashoffset={
+                2 * Math.PI * 50 * (1 - results.matchRating / 100)
+              }
+              strokeLinecap="round"
+            />
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center text-xl font-bold text-blue-700 dark:text-blue-400">
+            {results.matchRating}%
           </div>
         </div>
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-white flex items-center gap-2">
+          <Target className="w-5 h-5 text-blue-600" /> Match Rating
+        </h2>
       </div>
 
-      {/* Keywords Section */}
-      {missingSkills.length > 0 && (
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <div className="flex items-center space-x-2 mb-4">
-            <Target className="h-5 w-5 text-blue-600" />
-            <h3 className="text-lg font-semibold text-gray-900">Key Skills & Keywords</h3>
+      {/* ✅ Missing Skills */}
+      {results.missingSkills.length > 0 && (
+        <div className="bg-red-50 dark:bg-red-900/30 p-5 rounded-xl">
+          <div className="flex items-center space-x-2 mb-3">
+            <AlertCircle className="text-red-500 w-6 h-6" />
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-red-200">
+              Missing Skills
+            </h3>
           </div>
           <div className="flex flex-wrap gap-2">
-            {missingSkills.map((skill: string, index: number) => (
+            {results.missingSkills.map((skill, index) => (
               <span
                 key={index}
-                className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+                className="px-3 py-1 text-sm rounded-full bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200"
               >
                 {skill}
               </span>
@@ -80,48 +76,52 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
         </div>
       )}
 
-      {/* Suggestions Section */}
-      {overallSuggestions.length > 0 && (
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <div className="flex items-center space-x-2 mb-4">
-            <Lightbulb className="h-5 w-5 text-yellow-600" />
-            <h3 className="text-lg font-semibold text-gray-900">Quick Suggestions</h3>
+      {/* ✅ Suggestions */}
+      {results.overallSuggestions.length > 0 && (
+        <div className="bg-yellow-50 dark:bg-yellow-900/30 p-5 rounded-xl">
+          <div className="flex items-center space-x-2 mb-3">
+            <Lightbulb className="text-yellow-500 w-6 h-6" />
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-yellow-200">
+              Suggestions
+            </h3>
           </div>
-          <ul className="space-y-2">
-            {overallSuggestions.map((suggestion: string, index: number) => (
-              <li key={index} className="flex items-start space-x-2">
-                <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                <span className="text-gray-700">{suggestion}</span>
-              </li>
+          <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
+            {results.overallSuggestions.map((s, index) => (
+              <li key={index}>{s}</li>
             ))}
           </ul>
         </div>
       )}
 
-      {/* Detailed Improvements Section */}
-      {relevantProjects.length > 0 && (
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <div className="flex items-center space-x-2 mb-4">
-            <AlertCircle className="h-5 w-5 text-orange-600" />
-            <h3 className="text-lg font-semibold text-gray-900">Detailed Improvements</h3>
+      {/* ✅ Relevant Projects */}
+      {results.relevantProjects.length > 0 && (
+        <div className="bg-green-50 dark:bg-green-900/30 p-5 rounded-xl">
+          <div className="flex items-center space-x-2 mb-3">
+            <TrendingUp className="text-green-600 w-6 h-6" />
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-green-200">
+              Relevant Projects
+            </h3>
           </div>
-          <div className="space-y-4">
-            {relevantProjects.map((project: string, index: number) => (
-              <div key={index} className="border-l-4 border-blue-500 pl-4">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium text-gray-900">{project}</h4>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor('medium')}`}>
-                    MEDIUM
-                  </span>
-                </div>
-                <p className="text-gray-700">
-                  Consider enhancing the project "{project}" with more technical details or quantified results.
-                </p>
+          <div className="flex flex-col gap-2">
+            {results.relevantProjects.map((proj, index) => (
+              <div
+                key={index}
+                className="p-3 rounded-lg bg-white dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-600"
+              >
+                {proj}
               </div>
             ))}
           </div>
         </div>
       )}
+
+      {/* ✅ Success Note */}
+      <div className="flex items-center space-x-2 border-t pt-5 dark:border-gray-700">
+        <CheckCircle className="text-green-600 w-5 h-5" />
+        <p className="text-gray-700 dark:text-gray-300">
+          Analysis complete - use these insights to improve your resume!
+        </p>
+      </div>
     </div>
   );
 };
