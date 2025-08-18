@@ -79,9 +79,14 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       >
         {selectedFile ? (
           <div className="flex items-center justify-between px-2">
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 min-w-0">
               <File className="text-blue-500" size={20} />
-              <span className="text-sm text-gray-700">{selectedFile.name}</span>
+              <span
+                className="text-sm text-gray-700 truncate max-w-[12ch] sm:max-w-[24ch] md:max-w-[32ch] overflow-hidden"
+                title={selectedFile.name}
+              >
+                {selectedFile.name}
+              </span>
             </div>
             <button
               type="button"
