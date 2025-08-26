@@ -1,3 +1,135 @@
+// import React, { useCallback, useState, useRef } from "react";
+// import { Upload, File, X } from "lucide-react";
+
+// interface FileUploadProps {
+//   onFileSelect: (file: File | null) => void;
+//   label: string;
+//   description: string;
+//   selectedFile?: File | null;
+//   error?: string;
+// }
+
+// export const FileUpload: React.FC<FileUploadProps> = ({
+//   onFileSelect,
+//   label,
+//   description,
+//   selectedFile,
+//   error,
+// }) => {
+//   const [dragActive, setDragActive] = useState(false);
+//   const inputRef = useRef<HTMLInputElement | null>(null);
+
+//   const handleFile = useCallback(
+//     (file: File) => {
+//       if (file.type !== "application/pdf") {
+//         onFileSelect(null);
+//         alert("Only PDF files are allowed.");
+//         return;
+//       }
+//       onFileSelect(file);
+//     },
+//     [onFileSelect]
+//   );
+
+//   const handleDrop = useCallback(
+//     (e: React.DragEvent<HTMLDivElement>) => {
+//       e.preventDefault();
+//       e.stopPropagation();
+//       setDragActive(false);
+//       if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+//         handleFile(e.dataTransfer.files[0]);
+//       }
+//     },
+//     [handleFile]
+//   );
+
+//   const handleBrowse = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     if (e.target.files && e.target.files[0]) {
+//       handleFile(e.target.files[0]);
+//       // Reset input so user can re-select the same file if needed
+//       e.target.value = "";
+//     }
+//   };
+
+//   return (
+//     <div className="space-y-2">
+//       <p className="block text-sm font-medium text-gray-700">{label}</p>
+
+//       {/* Drop Zone */}
+//       <div
+//         role="button"
+//         tabIndex={0}
+//         onClick={() => inputRef.current?.click()}
+//         onKeyDown={(e) => {
+//           if (e.key === "Enter" || e.key === " ") inputRef.current?.click();
+//         }}
+//         onDragOver={(e) => {
+//           e.preventDefault();
+//           setDragActive(true);
+//         }}
+//         onDragLeave={() => setDragActive(false)}
+//         onDrop={handleDrop}
+//         className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors outline-none ${
+//           dragActive
+//             ? "border-blue-500 bg-blue-50"
+//             : error
+//             ? "border-red-300 bg-red-50"
+//             : "border-gray-300 hover:border-blue-400"
+//         }`}
+//       >
+//         {selectedFile ? (
+//           <div className="flex items-center justify-between px-2">
+//             <div className="flex items-center space-x-2 min-w-0">
+//               <File className="text-blue-500" size={20} />
+//               <span
+//                 className="text-sm text-gray-700 truncate max-w-[12ch] sm:max-w-[24ch] md:max-w-[32ch] overflow-hidden"
+//                 title={selectedFile.name}
+//               >
+//                 {selectedFile.name}
+//               </span>
+//             </div>
+//             <button
+//               type="button"
+//               className="text-red-500 hover:text-red-700"
+//               onClick={(e) => {
+//                 e.stopPropagation();
+//                 onFileSelect(null);
+//               }}
+//             >
+//               <X size={18} />
+//             </button>
+//           </div>
+//         ) : (
+//           <div className="flex flex-col items-center space-y-2">
+//             <Upload className="text-gray-400" size={24} />
+//             <p className="text-sm text-gray-600">
+//               Drop your{" "}
+//               <span className="font-medium text-blue-600">PDF</span> here, or{" "}
+//               <span className="text-blue-600 underline">browse</span>
+//             </p>
+//           </div>
+//         )}
+
+//         {/* Hidden input */}
+//         <input
+//           ref={inputRef}
+//           type="file"
+//           accept="application/pdf"
+//           onChange={handleBrowse}
+//           className="hidden"
+//         />
+//       </div>
+
+//       {/* Description */}
+//       <p className="text-xs text-gray-500">{description}</p>
+
+//       {/* Error */}
+//       {error && <p className="text-sm text-red-600">{error}</p>}
+//     </div>
+//   );
+// };
+
+// ✅ FileUpload.tsx
 import React, { useCallback, useState, useRef } from "react";
 import { Upload, File, X } from "lucide-react";
 
@@ -46,16 +178,14 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const handleBrowse = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       handleFile(e.target.files[0]);
-      // Reset input so user can re-select the same file if needed
       e.target.value = "";
     }
   };
 
   return (
     <div className="space-y-2">
-      <p className="block text-sm font-medium text-gray-700">{label}</p>
+      <p className="block text-sm font-semibold text-gray-700">{label}</p>
 
-      {/* Drop Zone */}
       <div
         role="button"
         tabIndex={0}
@@ -69,20 +199,21 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         }}
         onDragLeave={() => setDragActive(false)}
         onDrop={handleDrop}
-        className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors outline-none ${
-          dragActive
-            ? "border-blue-500 bg-blue-50"
-            : error
-            ? "border-red-300 bg-red-50"
-            : "border-gray-300 hover:border-blue-400"
-        }`}
+        className={`relative flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-8 transition-all cursor-pointer outline-none
+          ${
+            dragActive
+              ? "border-blue-500 bg-blue-50 shadow-md"
+              : error
+              ? "border-red-400 bg-red-50"
+              : "border-gray-300 hover:border-blue-400 hover:bg-gray-50"
+          }`}
       >
         {selectedFile ? (
-          <div className="flex items-center justify-between px-2">
-            <div className="flex items-center space-x-2 min-w-0">
-              <File className="text-blue-500" size={20} />
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-2 truncate">
+              <File className="text-blue-500 flex-shrink-0" size={22} />
               <span
-                className="text-sm text-gray-700 truncate max-w-[12ch] sm:max-w-[24ch] md:max-w-[32ch] overflow-hidden"
+                className="text-sm font-medium text-gray-800 truncate max-w-[22ch] sm:max-w-[28ch]"
                 title={selectedFile.name}
               >
                 {selectedFile.name}
@@ -90,7 +221,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
             </div>
             <button
               type="button"
-              className="text-red-500 hover:text-red-700"
+              className="p-1.5 rounded-full text-red-500 hover:bg-red-100 transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
                 onFileSelect(null);
@@ -100,17 +231,16 @@ export const FileUpload: React.FC<FileUploadProps> = ({
             </button>
           </div>
         ) : (
-          <div className="flex flex-col items-center space-y-2">
-            <Upload className="text-gray-400" size={24} />
-            <p className="text-sm text-gray-600">
-              Drop your{" "}
-              <span className="font-medium text-blue-600">PDF</span> here, or{" "}
-              <span className="text-blue-600 underline">browse</span>
+          <div className="flex flex-col items-center gap-2 text-gray-500">
+            <Upload className="text-gray-400" size={28} />
+            <p className="text-sm">
+              <span className="font-medium text-blue-600">Upload PDF</span> or
+              drag & drop
             </p>
+            <p className="text-xs text-gray-400">Only .pdf files supported</p>
           </div>
         )}
 
-        {/* Hidden input */}
         <input
           ref={inputRef}
           type="file"
@@ -120,10 +250,8 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         />
       </div>
 
-      {/* Description */}
       <p className="text-xs text-gray-500">{description}</p>
 
-      {/* Error */}
       {error && <p className="text-sm text-red-600">{error}</p>}
     </div>
   );
