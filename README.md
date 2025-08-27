@@ -169,14 +169,14 @@ VITE_APP_NAME=AI Resume Helper
 
 ## 🤝 Contributing
 
-We welcome contributions to the frontend:
+I Welcome contributions to the frontend:
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your improvements
 4. Submit a pull request
 
-For backend workflow contributions, please contact us directly.
+For backend workflow contributions, please contact me directly.
 
 ## 💰 Pricing & Licensing
 
