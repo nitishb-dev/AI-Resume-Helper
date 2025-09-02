@@ -233,21 +233,21 @@ function App() {
         {/* Social links */}
         <div className="flex gap-5">
           <a
-            href="#"
+            href="mailto:nitishb057@gmail.com"
             className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-xl hover:bg-white/30 hover:scale-110 transition"
             title="Email"
           >
             📧
           </a>
           <a
-            href="#"
+            href="https://www.linkedin.com/in/nitishb-dev/"
             className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-xl hover:bg-white/30 hover:scale-110 transition"
             title="LinkedIn"
           >
             💼
           </a>
           <a
-            href="#"
+            href="https://github.com/nitishb-dev"
             className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-xl hover:bg-white/30 hover:scale-110 transition"
             title="GitHub"
           >
