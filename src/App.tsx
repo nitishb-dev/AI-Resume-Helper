@@ -142,29 +142,31 @@
 import { useEffect, useState } from 'react'
 
 function App() {
-  const [stars, setStars] = useState<Array<{ id: number; left: number; top: number; size: number; delay: number }>>([])
+  const [stars, setStars] = useState<
+    Array<{ id: number; left: number; top: number; size: number; delay: number }>
+  >([])
 
   useEffect(() => {
-    // Create stars
+    // Generate stars
     const starArray = []
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 40; i++) {
       starArray.push({
         id: i,
         left: Math.random() * 100,
         top: Math.random() * 100,
-        size: Math.random() * 3 + 1,
-        delay: Math.random() * 2
+        size: Math.random() * 2 + 1,
+        delay: Math.random() * 2,
       })
     }
     setStars(starArray)
 
-    // Mouse move effect
+    // Rocket hover movement
     const handleMouseMove = (e: MouseEvent) => {
       const rocket = document.querySelector('.rocket') as HTMLElement
       if (rocket) {
         const x = e.clientX / window.innerWidth
         const y = e.clientY / window.innerHeight
-        rocket.style.transform = `translate(${x * 20 - 10}px, ${y * 20 - 10}px) rotate(${x * 10 - 5}deg)`
+        rocket.style.transform = `translate(${x * 15 - 7}px, ${y * 15 - 7}px)`
       }
     }
 
@@ -173,25 +175,26 @@ function App() {
   }, [])
 
   return (
-    <div className="relative min-h-screen overflow-hidden font-sans text-white" 
-         style={{ 
-           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-           fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
-         }}>
-      
-      {/* Animated Background */}
-      <div 
+    <div
+      className="relative min-h-screen flex items-center justify-center text-white overflow-hidden"
+      style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      }}
+    >
+      {/* Background gradient animation */}
+      <div
         className="fixed inset-0 -z-10"
         style={{
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
           backgroundSize: '400% 400%',
-          animation: 'gradientShift 8s ease infinite'
+          animation: 'gradientShift 8s ease infinite',
         }}
       />
 
       {/* Stars */}
-      <div className="fixed inset-0 pointer-events-none z-10">
-        {stars.map(star => (
+      <div className="fixed inset-0 pointer-events-none z-0">
+        {stars.map((star) => (
           <div
             key={star.id}
             className="absolute bg-white rounded-full"
@@ -200,117 +203,58 @@ function App() {
               top: `${star.top}%`,
               width: `${star.size}px`,
               height: `${star.size}px`,
+              animation: 'twinkle 2s infinite alternate',
               animationDelay: `${star.delay}s`,
-              animation: 'twinkle 2s infinite alternate'
             }}
           />
         ))}
       </div>
-      
-      {/* Main Content */}
-      <div className="relative z-20 flex flex-col items-center justify-center min-h-screen px-5 text-center">
-        
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center px-6 text-center animate-fade-in">
         {/* Rocket */}
-        <div 
-          className="rocket text-6xl md:text-7xl mb-8 transition-transform duration-100 ease-out"
+        <div
+          className="rocket text-7xl md:text-8xl mb-6"
           style={{ animation: 'float 3s ease-in-out infinite' }}
         >
           🚀
         </div>
-        
+
         {/* Title */}
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+        <h1 className="text-3xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
           AI Resume Helper
         </h1>
-        
-        <h2 className="text-2xl md:text-3xl mb-4 opacity-90">
-          Under Construction
-        </h2>
-        
-        <p className="text-lg md:text-xl max-w-2xl leading-relaxed mb-8 opacity-80">
-          I'm currently developing an innovative AI-powered resume optimization tool. 
-          This personal project will help job seekers match their resumes perfectly with job descriptions!
+
+        {/* Subtitle */}
+        <p className="text-lg md:text-xl opacity-80 mb-10 max-w-xl">
+          This project is currently under construction. Stay tuned!
         </p>
-        
-        {/* Progress Bar */}
-        <div className="w-full max-w-md bg-white/20 rounded-full p-2 mb-4 backdrop-blur-sm">
-          <div 
-            className="h-5 rounded-full relative overflow-hidden"
-            style={{
-              background: 'linear-gradient(90deg, #4facfe 0%, #00f2fe 100%)',
-              animation: 'loading 3s ease-in-out infinite'
-            }}
+
+        {/* Social links */}
+        <div className="flex gap-5">
+          <a
+            href="#"
+            className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-xl hover:bg-white/30 hover:scale-110 transition"
+            title="Email"
           >
-            <div 
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
-              style={{ animation: 'shine 2s infinite' }}
-            />
-          </div>
-        </div>
-        
-        <p className="text-base opacity-70 mb-12">
-          Estimated completion: Working on it daily
-        </p>
-        
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-3 gap-6 max-w-4xl mb-12">
-          <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-sm border border-white/20 transition-transform hover:-translate-y-1">
-            <span className="text-4xl block mb-4">🤖</span>
-            <h3 className="text-xl font-semibold mb-2">Smart AI Analysis</h3>
-            <p className="opacity-80 leading-relaxed">
-              Implementing advanced AI to analyze resumes and provide actionable feedback
-            </p>
-          </div>
-          
-          <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-sm border border-white/20 transition-transform hover:-translate-y-1">
-            <span className="text-4xl block mb-4">⚡</span>
-            <h3 className="text-xl font-semibold mb-2">Real-time Matching</h3>
-            <p className="opacity-80 leading-relaxed">
-              Building instant compatibility scoring between resumes and job postings
-            </p>
-          </div>
-          
-          <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-sm border border-white/20 transition-transform hover:-translate-y-1">
-            <span className="text-4xl block mb-4">🎯</span>
-            <h3 className="text-xl font-semibold mb-2">Optimization Tips</h3>
-            <p className="opacity-80 leading-relaxed">
-              Developing personalized suggestions to improve your resume's impact
-            </p>
-          </div>
-        </div>
-        
-        {/* Contact Section */}
-        <div className="opacity-70">
-          <p className="text-lg mb-2">👨‍💻 Individual Project in Development</p>
-          <p className="text-sm mb-4">Follow the progress or get in touch!</p>
-          
-          <div className="flex justify-center gap-4">
-            <a 
-              href="#" 
-              className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl transition-all hover:bg-white/30 hover:scale-110" 
-              title="Email"
-            >
-              📧
-            </a>
-            <a 
-              href="#" 
-              className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl transition-all hover:bg-white/30 hover:scale-110" 
-              title="LinkedIn"
-            >
-              💼
-            </a>
-            <a 
-              href="#" 
-              className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl transition-all hover:bg-white/30 hover:scale-110" 
-              title="GitHub"
-            >
-              ⚡
-            </a>
-          </div>
+            📧
+          </a>
+          <a
+            href="#"
+            className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-xl hover:bg-white/30 hover:scale-110 transition"
+            title="LinkedIn"
+          >
+            💼
+          </a>
+          <a
+            href="#"
+            className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-xl hover:bg-white/30 hover:scale-110 transition"
+            title="GitHub"
+          >
+            ⚡
+          </a>
         </div>
       </div>
-
-
     </div>
   )
 }
