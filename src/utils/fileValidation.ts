@@ -2,8 +2,12 @@ export const validateFile = (file: File): { isValid: boolean; error?: string } =
   const maxSizeInMB = 10;
   const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
 
-  // Allow only PDF
-  const allowedTypes = ['application/pdf'];
+  // Allow PDF, DOC, and DOCX files, matching the backend configuration.
+  const allowedTypes = [
+    'application/pdf',
+    'application/msword', // .doc
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+  ];
 
   if (file.size > maxSizeInBytes) {
     return {
@@ -15,7 +19,7 @@ export const validateFile = (file: File): { isValid: boolean; error?: string } =
   if (!allowedTypes.includes(file.type)) {
     return {
       isValid: false,
-      error: 'Only PDF files are allowed'
+      error: 'Only PDF, DOC, and DOCX files are allowed'
     };
   }
 
