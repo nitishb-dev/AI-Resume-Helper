@@ -35,7 +35,7 @@ jobs:
               if: steps.check_pkg.outputs.exists == 'true'
               run: |
                 cd backend
-                npm ci
+                npm install
                 if grep -q "\"test\":" package.json; then
                     npm test
                 else
