@@ -37,7 +37,7 @@ jobs:
                 cd backend
                 npm install
                 if grep -q "\"test\":" package.json; then
-                    npm test --passwithNoTests
+                    npm test --passWithNoTests
                 else
                     echo "No test script found - skipping tests."
                 fi
