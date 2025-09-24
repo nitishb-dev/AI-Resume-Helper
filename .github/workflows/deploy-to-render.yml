@@ -79,8 +79,8 @@ jobs:
                 RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
               
               run: |
-                echo "Waiting 15s to allow Render to create deployment id"
-                sleep 15
+                echo "Waiting 2 minutes to allow Render to create deployment id"
+                sleep 120
 
                 echo "Fetching latest deploy id..."
                 # Get latest deploy id
