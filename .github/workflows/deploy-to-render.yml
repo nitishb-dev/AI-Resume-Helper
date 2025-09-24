@@ -60,7 +60,6 @@ jobs:
               with: 
                 service-id: ${{ secrets.RENDER_SERVICE_ID }}
                 api-key: ${{ secrets.RENDER_API_KEY }}
-                wait-for-success: false
 
             - name: Poll Render deploy logs
               env: 
@@ -71,9 +70,14 @@ jobs:
                 echo "Polling latest deploy logs..."
                 # Get latest deploy id
                 DEPLOY_ID=$(curl -s \
-                    -H "Authorization: Bearer $RENDER_API_KEY"\
+                    -H "Authorization: Bearer $RENDER_API_KEY" \
                     "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys?limit=1" \
                     | jq -r '.[0].id')
+
+                if [ -z "$DEPLOY_ID" ] || [ "$DEPLOY_ID" == "null" ]; then
+                    echo "Could not fetch deploy ID"
+                    exit 1
+                fi
 
                 echo "Deploy ID: $DEPLOY_ID"
 
@@ -83,13 +87,14 @@ jobs:
                     echo "Fetching logs..."
                     curl -s \
                         -H "Authorization: Bearer $RENDER_API_KEY" \
-                        "https://api.render.com/v1/services/$RENDER_SERVICE_ID/logs?tail=50" \
-                        | jq -r '.[]?.message'
+                        "https://api.render.com/v1/deploys/$DEPLOY_ID/events?tail=20" \
+                        | jq -r '.[].message'
 
                     STATUS=$(curl -s \ 
                         -H "Authorization: Bearer $RENDER_API_KEY" \
                         "https://api.render.com/v1/deploys/$DEPLOY_ID" \
                         | jq -r '.status')
+                    
                     echo "Current status: $STATUS"
                     sleep 10
                 done
