@@ -53,7 +53,19 @@ jobs:
               uses: actions/checkout@v4
               with:
                 fetch-depth: 0
-
+            
+            - name: Verify Render secrets exist
+              run: |
+                if [ -z "${{ secrets.RENDER_API_KEY }}" ]; then
+                  echo "RENDER_API_KEY is missing!"
+                  exit 1
+                fi
+                if [ -z "${{ secrets.RENDER_SERVICE_ID }}" ]; then
+                  echo "RENDER_SERVICE_ID is missing!"
+                  exit 1
+                fi
+                echo "All required secrets are available."
+            
             - name: Trigger Render deploy (using marketplace action)
               id: render_deploy
               uses: johnbeynon/render-deploy-action@v0.0.8
