@@ -77,55 +77,54 @@ jobs:
               env: 
                 RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
                 RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
-              
               run: |
-                echo "Waiting 3 minutes to allow Render to create deployment id"
-                sleep 180
+                echo "Waiting 120s to allow Render to create deployment id..."
+                sleep 120
 
-                echo "Fetching latest deploy id..."
-                # Get latest deploy id
+                # Get latest deploy ID
+                DEPLOY_ID=""
+                
                 for i in {1..10}; do
                   DEPLOY_ID=$(curl -s \
-                      -H "Authorization: Bearer $RENDER_API_KEY" \
-                      "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys?limit=1" \
-                      | jq -r '.[0].id')
-                  
+                  -H "Authorization: Bearer $RENDER_API_KEY" \
+                  "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys?limit=1" \
+                  | jq -r '.[0].id')
+
                   if [ "$DEPLOY_ID" != "null" ] && [ -n "$DEPLOY_ID" ]; then
+                    echo "Found Deploy ID: $DEPLOY_ID"
                     break
                   fi
 
-                  echo "Deploy not ready yet, retrying in 5s.."
-                  sleep 5
+                echo "Deploy not ready yet, retrying in 10s..."
+                sleep 10
                 done
-
+                
                 if [ -z "$DEPLOY_ID" ] || [ "$DEPLOY_ID" == "null" ]; then
-                    echo "Could not fetch deploy ID after 10 retires"
-                    exit 1
+                  echo "Could not fetch deploy ID after retries"
+                  exit 1
                 fi
 
-                echo "Deploy ID: $DEPLOY_ID"
-
-                # Poll until deploy finishes
+                # Poll status until it's no longer in_progress
                 STATUS="in_progress"
                 while [ "$STATUS" = "in_progress" ] || [ "$STATUS" = "build_in_progress" ]; do
-                    echo "Fetching logs..."
-                    curl -s \
-                        -H "Authorization: Bearer $RENDER_API_KEY" \
-                        "https://api.render.com/v1/deploys/$DEPLOY_ID/events?tail=20" \
-                        | jq -r '.[].message'
+                  echo "Fetching latest logs..."
+                  curl -s \
+                    -H "Authorization: Bearer $RENDER_API_KEY" \
+                    "https://api.render.com/v1/deploys/$DEPLOY_ID/events?limit=5" \
+                    | jq -r '.[].message'
 
-                    STATUS=$(curl -s \ 
-                        -H "Authorization: Bearer $RENDER_API_KEY" \
-                        "https://api.render.com/v1/deploys/$DEPLOY_ID" \
-                        | jq -r '.status')
-                    
-                    echo "Current status: $STATUS"
-                    sleep 10
+                  STATUS=$(curl -s \
+                    -H "Authorization: Bearer $RENDER_API_KEY" \
+                    "https://api.render.com/v1/deploys/$DEPLOY_ID" \
+                    | jq -r '.status')
+
+                  echo "Current status: $STATUS"
+                  sleep 15
                 done
 
                 if [ "$STATUS" = "live" ]; then
-                    echo "Deploy Succeeded!"
+                  echo "Deploy succeeded!"
                 else
-                    echo "Deploy Failed!"
-                    exit 1
+                  echo "Deploy failed with status: $STATUS"
+                  exit 1
                 fi
