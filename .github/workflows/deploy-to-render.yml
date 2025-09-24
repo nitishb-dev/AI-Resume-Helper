@@ -78,6 +78,9 @@ jobs:
                 RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
                 RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
               run: |
+                echo "Waiting for deploy to complete..."
+                sleep 120
+                
                 echo "Fetching latest deploy for service $RENDER_SERVICE_ID..."
 
                 DEPLOY_ID=$(curl -s \
