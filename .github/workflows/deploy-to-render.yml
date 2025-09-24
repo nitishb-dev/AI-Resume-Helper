@@ -79,12 +79,12 @@ jobs:
                 RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
               
               run: |
-                echo "Waiting 2 minutes to allow Render to create deployment id"
-                sleep 120
+                echo "Waiting 3 minutes to allow Render to create deployment id"
+                sleep 180
 
                 echo "Fetching latest deploy id..."
                 # Get latest deploy id
-                for i in {1..5}; do
+                for i in {1..10}; do
                   DEPLOY_ID=$(curl -s \
                       -H "Authorization: Bearer $RENDER_API_KEY" \
                       "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys?limit=1" \
@@ -99,7 +99,7 @@ jobs:
                 done
 
                 if [ -z "$DEPLOY_ID" ] || [ "$DEPLOY_ID" == "null" ]; then
-                    echo "Could not fetch deploy ID after 5 retires"
+                    echo "Could not fetch deploy ID after 10 retires"
                     exit 1
                 fi
 

@@ -21,6 +21,10 @@ app.get("/api/health", (req, res) => {
   res.json({ success: true, message: "Server is up and running!" });
 });
 
+app.get("/", (req, res) => {
+  res.send("✅ AI Resume Helper Backend is running!");
+});
+
 // Handle 404 - Not Found for any unhandled routes
 app.use((req, res, next) => {
   const error = new Error("Endpoint not found");
@@ -30,6 +34,7 @@ app.use((req, res, next) => {
 
 // Global error handler
 app.use(errorHandler);
+
 
 // Start server
 const PORT = process.env.PORT || 5000;
