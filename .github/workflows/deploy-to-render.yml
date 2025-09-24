@@ -37,7 +37,7 @@ jobs:
                 cd backend
                 npm install
                 if grep -q "\"test\":" package.json; then
-                    npm test --passWithNoTests
+                    npm test -- --passWithNoTests
                 else
                     echo "No test script found - skipping tests."
                 fi
@@ -60,6 +60,7 @@ jobs:
               with: 
                 service-id: ${{ secrets.RENDER_SERVICE_ID }}
                 api-key: ${{ secrets.RENDER_API_KEY }}
+                wait-for-success: false
 
             - name: Poll Render deploy logs
               env: 
