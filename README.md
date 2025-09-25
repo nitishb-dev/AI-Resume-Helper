@@ -178,13 +178,6 @@ I Welcome contributions to the frontend:
 
 For backend workflow contributions, please contact me directly.
 
-## 💰 Pricing & Licensing
-
-### **Frontend**
-- ✅ **Free & Open Source** - MIT License
-- ✅ **Commercial Use** - Allowed
-- ✅ **Educational Use** - Encouraged
-
 ### **AI Workflow**
 - 💼 **Commercial License** - Required for business use
 - 🎓 **Educational Discount** - Available for students
