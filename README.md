@@ -18,7 +18,7 @@ A cutting-edge web application that leverages AI to analyze resumes against job 
 - Professional algorithms for comprehensive evaluation
 
 ### 📁 **Multi-Format Support**
-- **PDF Upload** - Upload resume files with advanced text extraction
+- **PDF/DOCX Upload** - Upload resume files with advanced text extraction
 - **Direct Text Input** - Paste job descriptions for optimal accuracy
 - **File Validation** - Secure upload with size and type restrictions
 
@@ -57,7 +57,7 @@ No installation required - start analyzing your resume in seconds!
 ## 🎯 How It Works
 
 ### 1. **Upload Your Resume**
-Upload your PDF resume using our secure file handling system
+Upload your PDF/DOCX resume using our secure file handling system
 
 ### 2. **Add Job Description**
 Paste the job description you're targeting for optimal matching
@@ -70,6 +70,7 @@ Our advanced AI analyzes compatibility and generates detailed insights
 - Missing keywords identification
 - Priority-based improvement suggestions
 - ATS optimization recommendations
+- Can Export Results as PDF
 
 ## 📊 Analysis Capabilities
 
@@ -101,7 +102,10 @@ git clone https://github.com/yourusername/ai-resume-helper
 cd ai-resume-helper
 
 # Install dependencies
-npm install
+npm install 
+
+# Create environment file
+.env
 
 # Start development server
 npm run dev
