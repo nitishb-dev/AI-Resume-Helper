@@ -1,20 +1,24 @@
+// src/types/index.ts
+
 export interface ResumeData {
   resume: File;
   jobDescription: string | File;
 }
 
+export interface ResumeAnalysisResult {
+  matchScore: number;
+  keywords: string[];
+  suggestions: string[];
+  improvements: {
+    section: string;
+    recommendation: string;
+    priority: "high" | "medium" | "low";
+  }[];
+}
+
 export interface APIResponse {
   success: boolean;
-  data?: {
-    keywords: string[];
-    suggestions: string[];
-    matchScore: number;
-    improvements: {
-      section: string;
-      recommendation: string;
-      priority: 'high' | 'medium' | 'low';
-    }[];
-  };
+  data?: ResumeAnalysisResult;
   error?: string;
 }
 

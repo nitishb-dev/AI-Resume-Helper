@@ -1,0 +1,39 @@
+Position: Software Engineer Intern
+Location: Remote
+Duration: 3-6 Months
+Stipend: Unpaid (College Credit Offered)
+
+About the Role:
+We’re looking for a passionate and self-driven Software Engineering Intern to join our tech team. You’ll work closely with senior developers on real-world web and backend projects using modern tools and frameworks.
+
+Responsibilities:
+Assist in developing and maintaining web applications using JavaScript, React, and Node.js
+Collaborate with backend team to integrate APIs and manage databases (MySQL or MongoDB)
+Write clean, modular, and well-documented code
+Participate in code reviews and daily stand-ups
+Learn and apply Agile software development practices
+
+Required Skills:
+Good understanding of DSA and problem-solving
+Hands-on knowledge of HTML, CSS, JavaScript
+Experience with React.js and/or Node.js
+Basic knowledge of REST APIs and Git
+Ability to work independently and in a team
+
+Bonus Skills (Good to Have):
+Knowledge of TypeScript
+Experience with Docker or CI/CD
+Exposure to cloud platforms (AWS, GCP, or Azure)
+Open-source contributions or personal projects
+
+Eligibility:
+Pursuing B.E./B.Tech/B.Sc in Computer Science or related field
+Final year or pre-final year student
+Available to commit at least 20 hours/week
+
+Perks:
+Certificate of completion
+Flexible working hours
+Letter of Recommendation (based on performance)
+Potential PPO for top performers
+
